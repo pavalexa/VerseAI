@@ -1,7 +1,8 @@
-# app.py
+# app.py - Your existing app with background music added
 
 import os
 import streamlit as st
+import base64
 from poem_generator import generate_poem
 from tts import text_to_speech
 from PIL import Image
@@ -18,6 +19,37 @@ HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 # BLIP model and processor (Hugging Face fallback)
 blip_processor = None
 blip_model = None
+
+
+# NEW: Function to embed background music
+def add_background_music(audio_file_path):
+    """Add background music that plays automatically"""
+    if os.path.exists(audio_file_path):
+        with open(audio_file_path, "rb") as audio_file:
+            audio_bytes = audio_file.read()
+        audio_base64 = base64.b64encode(audio_bytes).decode()
+
+        audio_html = f"""
+        <audio autoplay loop style="display: none;">
+            <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+        </audio>
+        """
+        st.markdown(audio_html, unsafe_allow_html=True)
+    else:
+        st.warning(f"Background music file not found: {audio_file_path}")
+
+
+# NEW: Custom CSS for better styling (optional)
+st.markdown("""
+<style>
+.main {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+.stApp > header {
+    background-color: transparent;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 def primary_generate_caption(image_path):
@@ -104,6 +136,24 @@ def generate_caption(image_path):
 
 # Streamlit UI
 st.title("VerseVision: AI-Powered Poetic Captions")
+
+# NEW: Add background music selection
+st.sidebar.title("🎵 Background Music")
+music_option = st.sidebar.selectbox(
+    "Choose background music:",
+    ["None", "Classical Piano", "Ambient Nature", "Soft Instrumental"]
+)
+
+# NEW: Play selected background music
+if music_option != "None":
+    music_files = {
+        "Classical Piano": "assets/classical_piano.mp3",
+        "Ambient Nature": "assets/nature_ambient.mp3",
+        "Soft Instrumental": "assets/soft_instrumental.mp3"
+    }
+
+    if music_option in music_files:
+        add_background_music(music_files[music_option])
 
 uploaded_file = st.file_uploader("Upload an image", type=["jpg", "jpeg", "png"])
 
