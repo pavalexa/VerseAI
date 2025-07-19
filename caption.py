@@ -27,11 +27,9 @@ def get_image_caption(image_bytes, max_retries=3):
         try:
             print(f"Attempt {attempt + 1}: Making request to Hugging Face API...")
 
-            # If image_bytes is already bytes, use it directly
             if isinstance(image_bytes, bytes):
                 files = {"inputs": image_bytes}
             else:
-                # If it's a file path, read it
                 with open(image_bytes, 'rb') as f:
                     files = {"inputs": f.read()}
 

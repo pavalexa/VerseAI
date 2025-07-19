@@ -8,22 +8,17 @@ from tts import text_to_speech
 from PIL import Image
 from dotenv import load_dotenv
 
-# Hugging Face fallback for captioning
 from transformers import BlipProcessor, BlipForConditionalGeneration
 
 load_dotenv()
 
-# Hugging Face API token
 HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 
-# BLIP model and processor (Hugging Face fallback)
 blip_processor = None
 blip_model = None
 
 
-# NEW: Function to embed background music
 def add_background_music(audio_file_path):
-    """Add background music that plays automatically"""
     if os.path.exists(audio_file_path):
         with open(audio_file_path, "rb") as audio_file:
             audio_bytes = audio_file.read()
@@ -39,7 +34,6 @@ def add_background_music(audio_file_path):
         st.warning(f"Background music file not found: {audio_file_path}")
 
 
-# NEW: Custom CSS for better styling (optional)
 st.markdown("""
 <style>
 .main {
@@ -53,17 +47,14 @@ st.markdown("""
 
 
 def primary_generate_caption(image_path):
-    # Use your existing caption.py functionality
     try:
         print(f"Attempting to generate caption for: {image_path}")
         from caption import get_image_caption
 
-        # Try with file path first
         caption = get_image_caption(image_path)
         if caption and caption != "Unable to generate caption.":
             return caption
 
-        # If that fails, try reading the file as bytes
         print("Trying with image bytes...")
         with open(image_path, 'rb') as f:
             image_bytes = f.read()
@@ -84,7 +75,6 @@ def generate_caption(image_path):
     global blip_processor, blip_model
 
     try:
-        # Try your existing caption generation first
         print("INFO: Trying primary caption generator...")
         caption = primary_generate_caption(image_path)
         if caption:
@@ -99,7 +89,6 @@ def generate_caption(image_path):
         traceback.print_exc()
 
     try:
-        # Fallback: Hugging Face BLIP
         print("INFO: Falling back to Hugging Face BLIP for captioning...")
         if blip_processor is None or blip_model is None:
             print("Loading BLIP model and processor...")
@@ -130,15 +119,12 @@ def generate_caption(image_path):
         import traceback
         traceback.print_exc()
 
-    # Final fallback - return a generic description
     return "A photograph or image that could not be automatically described."
 
 
-# Streamlit UI
 st.title("VerseVision: AI-Powered Poetic Captions")
 
-# NEW: Add background music selection
-st.sidebar.title("🎵 Background Music")
+st.sidebar.title("Background Music")
 music_option = st.sidebar.selectbox(
     "Choose background music:",
     ["None", "Classical Piano", "Ambient Nature", "Soft Instrumental"]
@@ -164,25 +150,23 @@ if uploaded_file is not None:
     st.image(image_path, caption="Uploaded Image", use_container_width=True)
 
     caption = generate_caption(image_path)
-    st.subheader("📝 Generated Caption")
+    st.subheader("Generated Caption")
     st.write(caption)
 
     poem = generate_poem(caption)
-    st.subheader("🎨 Generated Poem")
+    st.subheader("Generated Poem")
     st.write(poem)
 
-    # Optional: Generate TTS audio
     try:
         audio_path = text_to_speech(poem)
         if audio_path:
-            st.subheader("🎵 Audio Poem")
+            st.subheader("Audio Poem")
             st.audio(audio_path, format="audio/mp3")
         else:
             st.info("Audio generation is currently unavailable.")
     except Exception as e:
         st.info(f"Audio generation failed: {str(e)}")
 
-    # Clean up temp file
     os.remove(image_path)
 else:
     st.info("Please upload an image to generate a caption and poem.")

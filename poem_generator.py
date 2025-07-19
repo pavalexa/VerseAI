@@ -6,10 +6,8 @@ import random
 from dotenv import load_dotenv
 from openai import OpenAI, AuthenticationError, RateLimitError
 
-# Load environment variables
 load_dotenv()
 
-# OpenAI client
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
@@ -21,7 +19,6 @@ class PoemGenerator:
             'ABCB': [(1, 3)],
         }
 
-        # Enhanced word banks for better poetry
         self.word_banks = {
             'adjectives': {
                 'beautiful': ['lovely', 'graceful', 'elegant', 'radiant', 'serene', 'divine', 'sublime'],
@@ -40,7 +37,6 @@ class PoemGenerator:
             }
         }
 
-        # Simple rhyming word groups
         self.rhyme_groups = {
             'light': ['bright', 'sight', 'night', 'flight', 'height', 'might'],
             'heart': ['art', 'part', 'start', 'smart', 'chart'],
@@ -53,10 +49,8 @@ class PoemGenerator:
         }
 
     def extract_keywords(self, prompt):
-        """Extract meaningful keywords from the prompt"""
         words = re.findall(r'\b\w+\b', prompt.lower())
 
-        # Define keyword categories
         people = [w for w in words if
                   w in ['woman', 'man', 'person', 'child', 'girl', 'boy', 'lady', 'gentleman', 'mother', 'father',
                         'daughter', 'son']]
@@ -83,20 +77,16 @@ class PoemGenerator:
         }
 
     def create_structured_poem(self, prompt):
-        """Create a well-structured poem using templates and rhyme schemes"""
         keywords = self.extract_keywords(prompt)
 
-        # Select elements with fallbacks
         person = keywords['people'][0] if keywords['people'] else random.choice(['figure', 'soul', 'heart', 'spirit'])
         emotion = keywords['emotions'][0] if keywords['emotions'] else random.choice(
             ['serene', 'gentle', 'peaceful', 'graceful'])
         color = keywords['colors'][0] if keywords['colors'] else random.choice(['golden', 'silver', 'soft', 'gentle'])
 
-        # Choose a rhyme scheme
         rhyme_scheme = random.choice(list(self.rhyme_groups.keys()))
         rhyming_words = self.rhyme_groups[rhyme_scheme]
 
-        # Template variations with proper structure
         templates = [
             {
                 'lines': [
@@ -127,7 +117,6 @@ class PoemGenerator:
             }
         ]
 
-        # Select template and add closing couplet
         template = random.choice(templates)
         poem_lines = template['lines']
 
@@ -143,10 +132,8 @@ class PoemGenerator:
         return '\n'.join(poem_lines)
 
     def create_fallback_poem(self, prompt):
-        """Create a simple but coherent poem when all else fails"""
         keywords = self.extract_keywords(prompt)
 
-        # Use the most basic template with guaranteed coherence
         person = keywords['people'][0] if keywords['people'] else 'figure'
         emotion = 'gentle' if 'crying' in prompt.lower() else 'peaceful'
 
@@ -161,20 +148,16 @@ A scene that's simply, just divine,
 Forever held in morning's dew."""
 
     def generate_with_hf_fallback(self, prompt):
-        """Generate poem with better Hugging Face handling"""
         try:
-            # Try a more structured approach with HF
             from transformers import pipeline, set_seed
 
-            # Use a better model for creative tasks
             generator = pipeline(
                 "text-generation",
-                model="gpt2",  # Slightly better than distilgpt2
+                model="gpt2",  # seems better than distilgpt2
                 tokenizer="gpt2"
             )
             set_seed(42)
 
-            # Create a more constrained prompt
             structured_prompt = f"""Complete this poem about: {prompt}
 
 In gentle light, a figure stands so bright,
@@ -190,24 +173,20 @@ Where shadows dance in"""
                 pad_token_id=50256
             )
 
-            # Extract and clean the result
             generated = result[0]['generated_text']
 
-            # Try to extract just the poem part
             if "In gentle light" in generated:
                 poem_start = generated.find("In gentle light")
                 poem_text = generated[poem_start:].split('\n')[0:4]  # Take first 4 lines
                 poem_text = [line.strip() for line in poem_text if line.strip()]
 
                 if len(poem_text) >= 2:
-                    # Add more lines to complete the poem
                     poem_text.extend([
                         "A moment caught in time's embrace,",
                         "Forever held in beauty's grace."
                     ])
                     return '\n'.join(poem_text[:6])  # Return 6-line poem
 
-            # If extraction fails, use structured fallback
             return self.create_structured_poem(prompt)
 
         except Exception as e:
@@ -215,9 +194,7 @@ Where shadows dance in"""
             return self.create_structured_poem(prompt)
 
     def generate_poem(self, prompt):
-        """Main poem generation method"""
         try:
-            # Try OpenAI first
             print("INFO: Trying OpenAI API...")
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
@@ -240,7 +217,6 @@ Where shadows dance in"""
             print(f"WARNING: OpenAI API failed ({type(e).__name__}): {e}")
             print("INFO: Using structured poem generation...")
 
-            # Instead of relying on HF models, use our structured approach
             return self.create_structured_poem(prompt)
 
         except Exception as ex:
@@ -248,16 +224,14 @@ Where shadows dance in"""
             return self.create_fallback_poem(prompt)
 
 
-# Convenience function to maintain compatibility
 def generate_poem(prompt):
     generator = PoemGenerator()
     return generator.generate_poem(prompt)
 
 
-# Example usage
 if __name__ == "__main__":
     test_prompt = "A young daughter crying while her mother comforts her"
     generator = PoemGenerator()
     poem = generator.generate_poem(test_prompt)
-    print("🎨 Generated Poem")
+    print("Generated Poem")
     print(poem)

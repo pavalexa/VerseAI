@@ -10,7 +10,7 @@ ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
 
 
 def get_available_voices():
-    """Get list of available voices from ElevenLabs"""
+    """ available voices from ElevenLabs"""
     url = "https://api.elevenlabs.io/v1/voices"
     headers = {"xi-api-key": ELEVENLABS_API_KEY}
 
@@ -31,7 +31,7 @@ def text_to_speech(poem_text, output_path="poem_audio.mp3", voice_id=None):
     if voice_id is None:
         voices = get_available_voices()
         if voices:
-            voice_id = voices[0][1]  # Use first available voice ID
+            voice_id = voices[0][1]  # first available voice ID
             print(f"Using voice: {voices[0][0]} (ID: {voice_id})")
         else:
             print("No voices available, using default voice ID")
