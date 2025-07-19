@@ -1,4 +1,4 @@
-# app.py - Your existing app with background music added
+# app.py
 
 import os
 import streamlit as st
