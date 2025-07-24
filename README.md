@@ -59,4 +59,4 @@ streamlit run app.py
 
 **Olga Mondrus** – Concept, Design, and Development
 
-**Alex Braginsky** - Development
+**Alex Braginsky** - Development, Validation and Testing
