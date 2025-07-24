@@ -1,6 +1,6 @@
 # VerseVision
 
-### *Turn any image into a voice-powered micro poem with AI.*
+### *Turn any image into a voice-powered micro poem with AI*
 
 ---
 
@@ -24,13 +24,14 @@ The app:
 git clone https://github.com/your-username/versevision.git
 cd versevision
 
-**2. Create and activate a virtual environment (optional but recommended)**
+**2. Create and activate a virtual environment**
 
 python -m venv .venv
 source .venv/bin/activate        # On macOS/Linux
 .venv\Scripts\activate           # On Windows
 
 **3. Install dependencies**
+
 pip install -r requirements.txt
 
 4. **Set up your API keys**
