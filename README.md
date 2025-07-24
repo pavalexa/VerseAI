@@ -41,7 +41,7 @@ ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 streamlit run app.py
 
 
-Known Issues or Limitations (Optional)
+Known Issues or Limitations
  - Requires stable internet connection due to reliance on external APIs
  - The HuggingFace BLIP model may take time to load on first use (503 delay)
  - ElevenLabs API may be rate-limited on free plans or during high load
