@@ -55,7 +55,8 @@ streamlit run app.py
  - Background music support is currently static, should be chosen by the user and may not sync perfectly with poem audio
  - Multi-language support is not yet implemented
 
-Contributors
+## Contributors
 
 **Olga Mondrus** – Concept, Design, and Development
+
 **Alex Braginsky** - Development
