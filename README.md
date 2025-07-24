@@ -34,7 +34,7 @@ source .venv/bin/activate        # On macOS/Linux
 
 pip install -r requirements.txt
 
-4. **Set up your API keys**
+**4. Set up your API keys**
 
 Create a file named .env in the root folder with the following content:
 
@@ -47,7 +47,8 @@ ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 streamlit run app.py
 
 
-Known Issues or Limitations
+## Known Issues or Limitations
+
  - Requires stable internet connection due to reliance on external APIs
  - The HuggingFace BLIP model may take time to load on first use (503 delay)
  - ElevenLabs API may be rate-limited on free plans or during high load
