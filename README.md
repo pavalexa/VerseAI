@@ -19,25 +19,30 @@ The app:
 
 ## How to Set Up and Run
 
-### 1. **Clone the repository**
+**1. Clone the repository**
 
 git clone https://github.com/your-username/versevision.git
 cd versevision
-2. Create and activate a virtual environment (optional but recommended)
 
-3. python -m venv .venv
+**2. Create and activate a virtual environment (optional but recommended)**
+
+python -m venv .venv
 source .venv/bin/activate        # On macOS/Linux
 .venv\Scripts\activate           # On Windows
-3. Install dependencies
+
+**3. Install dependencies**
 pip install -r requirements.txt
 
-4. Set up your API keys
+4. **Set up your API keys**
+
 Create a file named .env in the root folder with the following content:
 
 HUGGINGFACE_API_TOKEN=your_huggingface_api_key_here
+
 ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
 
-5. Run the app
+**5. Run the app**
+
 streamlit run app.py
 
 
@@ -49,5 +54,6 @@ Known Issues or Limitations
  - Multi-language support is not yet implemented
 
 Contributors
+
 **Olga Mondrus** – Concept, Design, and Development
 **Alex Braginsky** - Development
