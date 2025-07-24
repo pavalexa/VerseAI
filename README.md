@@ -37,7 +37,7 @@ pip install -r requirements.txt
 **4. Set up your API keys**
 
 Create a file named .env in the root folder with the following content:
-OPENAI_API_KEY==your_huggingface_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
 
 HUGGINGFACE_API_TOKEN=your_huggingface_api_key_here
 
